@@ -34,7 +34,7 @@ def build_dict(step, toy=False):
 
         words = list()
         for sentence in train_article_list + train_title_list:
-            for word in word_tokenize(sentence):
+            for word in word_tokenize(sentence, language='portuguese'):
                 words.append(word)
 
         word_counter = collections.Counter(words).most_common()
@@ -70,7 +70,7 @@ def build_dataset(step, word_dict, article_max_len, summary_max_len, toy=False):
     else:
         raise NotImplementedError
 
-    x = [word_tokenize(d) for d in article_list]
+    x = [word_tokenize(d, language='portuguese') for d in article_list]
     x = [[word_dict.get(w, word_dict["<unk>"]) for w in d] for d in x]
     x = [d[:article_max_len] for d in x]
     x = [d + (article_max_len - len(d)) * [word_dict["<padding>"]] for d in x]
@@ -78,7 +78,7 @@ def build_dataset(step, word_dict, article_max_len, summary_max_len, toy=False):
     if step == "valid":
         return x
     else:        
-        y = [word_tokenize(d) for d in title_list]
+        y = [word_tokenize(d, language='portuguese') for d in title_list]
         y = [[word_dict.get(w, word_dict["<unk>"]) for w in d] for d in y]
         y = [d[:(summary_max_len - 1)] for d in y]
         return x, y
